@@ -1,0 +1,30 @@
+[
+  {
+    "name": "inspire",
+    "path": "/inspire",
+    "component": "C:\\\\Users\\\\fariz\\\\coding\\\\asiap-sample\\\\client\\\\pages\\\\inspire.vue",
+    "chunkName": "pages/inspire",
+    "_name": "_6b4dc77e"
+  },
+  {
+    "name": "login",
+    "path": "/login",
+    "component": "C:\\\\Users\\\\fariz\\\\coding\\\\asiap-sample\\\\client\\\\pages\\\\login.vue",
+    "chunkName": "pages/login",
+    "_name": "_cbe73de0"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "C:\\\\Users\\\\fariz\\\\coding\\\\asiap-sample\\\\client\\\\pages\\\\index.vue",
+    "chunkName": "pages/index",
+    "_name": "_5f36840e"
+  },
+  {
+    "name": "continent-mountain",
+    "path": "/:continent/:mountain?",
+    "component": "C:\\\\Users\\\\fariz\\\\coding\\\\asiap-sample\\\\client\\\\pages\\\\_continent\\\\_mountain.vue",
+    "chunkName": "pages/_continent/_mountain",
+    "_name": "_4d119c84"
+  }
+]
