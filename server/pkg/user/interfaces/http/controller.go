@@ -32,8 +32,21 @@ func (controller *Controller) GetUserRegistrationByManagerID(c echo.Context) err
 		return c.JSON(http.StatusInternalServerError, common.NewInternalServerErrorResponse())
 	}
 
-	response := NewAddUserRegistrationResponse(item.ID())
+	response := NewUsersResponse(item)
 	return c.JSON(http.StatusOK, response)
+}
+
+func (controller *Controller) ApproveUserRegistration(c echo.Context) error {
+	ID := c.Param("id")
+
+	err := controller.service.ApproveRegistration(ID)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, common.NewInternalServerErrorResponse())
+	}
+
+	response := NewAddUserRegistrationResponse(ID)
+	return c.JSON(http.StatusCreated, response)
 }
 
 func (controller *Controller) AddUserRegistration(c echo.Context) error {

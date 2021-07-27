@@ -13,6 +13,7 @@ func RegisterPath(e *echo.Echo, userController *Controller) {
 	//item
 	itemV1 := e.Group("v1/user")
 	itemV1.GET("/bymanager/:id", userController.GetUserRegistrationByManagerID)
+	itemV1.POST("/:id/approve", userController.ApproveUserRegistration)
 	itemV1.POST("/request", userController.AddUserRegistration)
 
 	//health check

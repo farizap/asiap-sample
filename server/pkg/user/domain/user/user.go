@@ -2,7 +2,16 @@ package user
 
 import "errors"
 
-var ErrEmptyOrderID = errors.New("empty user id")
+var ErrEmptyUserID = errors.New("empty user id")
+
+type UserStatus string
+
+const (
+	Requested UserStatus = "requested"
+	Approved             = "approved"
+	Rejected             = "rejected"
+	Active               = "active"
+)
 
 type User struct {
 	id        string
@@ -10,6 +19,7 @@ type User struct {
 	email     string
 	location  string
 	managerID string
+	status    UserStatus
 }
 
 func (o User) ID() string {
@@ -17,7 +27,7 @@ func (o User) ID() string {
 }
 
 func (o User) Name() string {
-	return o.Name()
+	return o.name
 }
 
 func (o User) Email() string {
@@ -32,10 +42,22 @@ func (o User) ManagerID() string {
 	return o.managerID
 }
 
+func (o User) Status() string {
+	return string(o.status)
+}
+
+func (o *User) ApproveUser() {
+	o.status = Approved
+}
+
+func (o *User) ActivateUser() {
+	o.status = Active
+}
+
 func NewUser(id string, name string, email string, location string, managerID string) (*User, error) {
 	if len(id) == 0 {
-		return nil, ErrEmptyOrderID
+		return nil, ErrEmptyUserID
 	}
 
-	return &User{id, name, email, location, managerID}, nil
+	return &User{id, name, email, location, managerID, Requested}, nil
 }
