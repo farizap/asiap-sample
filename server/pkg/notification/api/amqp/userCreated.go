@@ -2,7 +2,7 @@ package amqp
 
 import (
 	"asiap/pkg/common/event"
-	"asiap/pkg/notification/application"
+	"asiap/pkg/notification/business"
 	"encoding/json"
 	"log"
 
@@ -12,10 +12,10 @@ import (
 )
 
 type UserCreatedHandler struct {
-	service application.NotificationService
+	service business.NotificationService
 }
 
-func NewUserCreatedHandler(s application.NotificationService) *UserCreatedHandler {
+func NewUserCreatedHandler(s business.NotificationService) *UserCreatedHandler {
 	return &UserCreatedHandler{s}
 }
 
@@ -40,14 +40,14 @@ func (h UserCreatedHandler) Handler(msg *message.Message) ([]*message.Message, e
 
 	h.service.SendEmailNotification(p.Email)
 
-	userRegistration := event.EmailNotificationSentMsg{
+	emailNotificationMsg := event.EmailNotificationSentMsg{
 		ID:    p.ID,
 		Email: p.Email,
 	}
 
-	b, err := json.Marshal(userRegistration)
+	b, err := json.Marshal(emailNotificationMsg)
 	if err != nil {
-		return nil, errors.Wrap(err, "cannot marshal userRegistration for amqp")
+		return nil, errors.Wrap(err, "cannot marshal emailNotificationMsg for amqp")
 	}
 
 	msg = message.NewMessage(watermill.NewUUID(), b)

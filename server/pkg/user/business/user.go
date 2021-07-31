@@ -1,7 +1,7 @@
-package application
+package business
 
 import (
-	"asiap/pkg/user/domain/user"
+	"asiap/pkg/user/core/user"
 
 	"github.com/pkg/errors"
 )

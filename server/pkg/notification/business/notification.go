@@ -1,7 +1,7 @@
-package application
+package business
 
 import (
-	"asiap/pkg/notification/domain/notification"
+	"asiap/pkg/notification/core/notification"
 
 	"github.com/pkg/errors"
 )

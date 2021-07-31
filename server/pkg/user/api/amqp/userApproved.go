@@ -2,7 +2,7 @@ package amqp
 
 import (
 	"asiap/pkg/common/event"
-	"asiap/pkg/user/application"
+	"asiap/pkg/user/business"
 	"encoding/json"
 	"log"
 
@@ -12,10 +12,10 @@ import (
 )
 
 type UserApprovedHandler struct {
-	service application.UserService
+	service business.UserService
 }
 
-func NewUserApprovedHandler(s application.UserService) *UserApprovedHandler {
+func NewUserApprovedHandler(s business.UserService) *UserApprovedHandler {
 	return &UserApprovedHandler{s}
 }
 

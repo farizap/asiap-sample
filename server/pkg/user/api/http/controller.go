@@ -2,7 +2,7 @@ package http
 
 import (
 	common "asiap/pkg/common/http"
-	"asiap/pkg/user/application"
+	"asiap/pkg/user/business"
 	"net/http"
 
 	v10 "github.com/go-playground/validator/v10"
@@ -11,12 +11,12 @@ import (
 
 //Controller Get item API controller
 type Controller struct {
-	service   application.UserService
+	service   business.UserService
 	validator *v10.Validate
 }
 
 //NewController Construct item API controller
-func NewController(service application.UserService) *Controller {
+func NewController(service business.UserService) *Controller {
 	return &Controller{
 		service,
 		v10.New(),
@@ -56,7 +56,7 @@ func (controller *Controller) AddUserRegistration(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, common.NewBadRequestResponse())
 	}
 
-	cmd := application.AddUserRegistrationCommand{ID: createItemRequest.ID, Name: createItemRequest.Name, Email: createItemRequest.Email, Location: createItemRequest.Location, ManagerID: createItemRequest.ManagerID}
+	cmd := business.AddUserRegistrationCommand{ID: createItemRequest.ID, Name: createItemRequest.Name, Email: createItemRequest.Email, Location: createItemRequest.Location, ManagerID: createItemRequest.ManagerID}
 	err := controller.service.AddUserRegistration(cmd)
 
 	if err != nil {

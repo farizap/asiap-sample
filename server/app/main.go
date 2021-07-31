@@ -1,20 +1,20 @@
 package main
 
 import (
-	userApplication "asiap/pkg/user/application"
-	userMessagePublisher "asiap/pkg/user/infrastructure/amqp"
-	userRepository "asiap/pkg/user/infrastructure/repository"
-	userAmqpInterface "asiap/pkg/user/interfaces/amqp"
-	userHttp "asiap/pkg/user/interfaces/http"
-	"fmt"
+	userAmqpInterface "asiap/pkg/user/api/amqp"
+	userHttp "asiap/pkg/user/api/http"
+	userBusiness "asiap/pkg/user/business"
+	userMessagePublisher "asiap/pkg/user/modules/amqp"
+	userRepository "asiap/pkg/user/modules/repository"
 
-	notificationApplication "asiap/pkg/notification/application"
-	notificationMessageEmailProvider "asiap/pkg/notification/infrastructure/email"
-	notificationAmqpInterface "asiap/pkg/notification/interfaces/amqp"
+	notificationAmqpInterface "asiap/pkg/notification/api/amqp"
+	notificationBusiness "asiap/pkg/notification/business"
+	notificationMessageEmailProvider "asiap/pkg/notification/modules/email"
 
 	amqpCommon "asiap/pkg/common/amqp"
 
 	"context"
+	"fmt"
 	"os"
 	"os/signal"
 	"time"
@@ -42,12 +42,12 @@ func main() {
 
 	userMsgPub := userMessagePublisher.NewAMQPService(publisher)
 	userRepo := userRepository.NewMemoryRepository()
-	userService := userApplication.NewUserService(userRepo, userMsgPub)
+	userService := userBusiness.NewUserService(userRepo, userMsgPub)
 	userController := userHttp.NewController(userService)
 	userMessageHandlers := userAmqpInterface.NewUserAMQPInterface(userService)
 
 	notificationEmailProvider := notificationMessageEmailProvider.NewEmailMockProvider()
-	notificationService := notificationApplication.NewNotificationService(notificationEmailProvider)
+	notificationService := notificationBusiness.NewNotificationService(notificationEmailProvider)
 	notificationMessageHandlers := notificationAmqpInterface.NewNotificationAMQPInterface(notificationService)
 
 	/////////////////// Create Message Router
@@ -77,7 +77,7 @@ func main() {
 
 	router.AddNoPublisherHandler(
 		"print_outgoing_messages_in_notification",
-		"notification.#",
+		"notification.emailNotificationSent",
 		subscriber,
 		printMessages,
 	)

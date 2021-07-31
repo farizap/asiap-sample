@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"asiap/pkg/user/domain/user"
+	"asiap/pkg/user/core/user"
 )
 
 type MemoryRepository struct {

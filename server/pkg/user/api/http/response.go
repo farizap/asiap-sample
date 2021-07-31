@@ -1,7 +1,7 @@
 package http
 
 import (
-	"asiap/pkg/user/domain/user"
+	"asiap/pkg/user/core/user"
 )
 
 type AddUserRegistrationResponse struct {
