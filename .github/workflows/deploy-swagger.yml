@@ -1,0 +1,28 @@
+name: Landing Page Beta CD
+
+on:
+  release:
+    types:
+      - prereleased
+
+jobs:
+  publish-beta:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: yarn install
+      - run: yarn build
+      # - run: cp conf/robots-beta.txt dist/robots.txt
+      # - run: cp conf/_redirects dist/_redirects
+      - name: Deploy swagger static site to netlify
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.BETA_NETLIFY_SITE_ID }}
+        with:
+          args: deploy --dir=dist --prod
+          secrets: '["NETLIFY_AUTH_TOKEN", "BETA_NETLIFY_SITE_ID"]'
