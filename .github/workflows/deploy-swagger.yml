@@ -13,7 +13,7 @@ jobs:
           node-version: 14.x
       - name: build ReDoc
         working-directory: ./server
-        run: npx redoc-cli bundle -o ./dist/index.html ./docs/swagger.yaml
+        run: npx redoc-cli bundle -o ./dist/index.html ./docs/swagger.yml
       # - run: cp conf/robots-beta.txt dist/robots.txt
       # - run: cp conf/_redirects dist/_redirects
       - name: Deploy swagger static site to netlify
