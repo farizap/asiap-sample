@@ -1,9 +1,6 @@
 name: Landing Page Beta CD
 
-on:
-  release:
-    types:
-      - prereleased
+on: workflow_dispatch 
 
 jobs:
   publish-beta:
@@ -14,15 +11,18 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14.x
-      - run: yarn install
-      - run: yarn build
+      - name: build ReDoc
+        working-directory: ./server
+        run: |
+        npx redoc-cli bundle -o ./dist/index.html ./docs/swagger.yaml
+      - 
       # - run: cp conf/robots-beta.txt dist/robots.txt
       # - run: cp conf/_redirects dist/_redirects
       - name: Deploy swagger static site to netlify
         uses: netlify/actions/cli@master
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.BETA_NETLIFY_SITE_ID }}
+          # NETLIFY_SITE_ID: ${{ secrets.BETA_NETLIFY_SITE_ID }}
         with:
-          args: deploy --dir=dist --prod
+          args: deploy --dir=./server/dist --prod
           secrets: '["NETLIFY_AUTH_TOKEN", "BETA_NETLIFY_SITE_ID"]'

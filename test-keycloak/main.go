@@ -55,7 +55,7 @@ func main() {
 	jwt, err := client.Login(ctx, "backoffice-dashboard", "0913ce29-e2fc-4244-93d8-6c08117d0eec", "axiapp", "somethingFalse@really.wrong", "123456")
 	if err != nil {
 		fmt.Print(err.Error())
-		panic("Oh no!, failed to login :(")
+		panic("Oh no!, failed to login :((")
 	}
 
 	fmt.Println(jwt.AccessToken)
