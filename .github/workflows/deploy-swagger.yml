@@ -1,9 +1,6 @@
 name: Landing Page Beta CD
 
-on:
-  release:
-    types:
-      - prereleased
+on: workflow_dispatch 
 
 jobs:
   publish-beta:
