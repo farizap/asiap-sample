@@ -7,6 +7,7 @@ import (
 
 func NewUserAMQPInterface(s business.UserService) []amqpCommon.MessageHandler {
 	userApprovedHandler := NewUserApprovedHandler(s)
+	userApprovedTwoHandler := NewUserApprovedTwoHandler(s)
 
-	return []amqpCommon.MessageHandler{userApprovedHandler}
+	return []amqpCommon.MessageHandler{userApprovedHandler, userApprovedTwoHandler}
 }

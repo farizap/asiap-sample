@@ -31,11 +31,37 @@ import (
 var amqpURI = "amqp://guest:guest@rabbitmq:5672/"
 var logger = watermill.NewStdLogger(false, false)
 
-func main() {
+func createSubscriber(queueSuffix string) *amqp.Subscriber {
+	subscriber, err := amqp.NewSubscriber(
+		// This config is based on this example: https://www.rabbitmq.com/tutorials/tutorial-three-go.html
+		// to create just a simple queue, you can use NewDurableQueueConfig or create your own config.
+		amqp.NewDurablePubSubConfig(
+			amqpURI,
+			// Rabbit's queue name in this example is based on Watermill's topic passed to Subscribe
+			// plus provided suffix.
+			//
+			// Exchange is Rabbit's "fanout", so when subscribing with suffix other than "test_consumer_group",
+			// it will also receive all messages. It will work like separate consumer groups in Kafka.
+			amqp.GenerateQueueNameTopicNameWithSuffix(queueSuffix),
+		),
+		watermill.NewStdLogger(false, false),
+	)
+	if err != nil {
+		panic(err)
+	}
+	return subscriber
+}
 
-	amqpConfig := amqp.NewDurableQueueConfig(amqpURI)
-	subscriber, err := amqp.NewSubscriber(amqpConfig, logger)
-	publisher, err := amqp.NewPublisher(amqpConfig, logger)
+func main() {
+	subscriber1 := createSubscriber("notification")
+	subscriber2 := createSubscriber("user")
+	publisher, err := amqp.NewPublisher(
+		amqp.NewDurablePubSubConfig(
+			amqpURI,
+			nil,
+		),
+		watermill.NewStdLogger(false, false),
+	)
 	if err != nil {
 		panic(err)
 	}
@@ -72,13 +98,13 @@ func main() {
 		// // In this case, it passes them as errors to the Retry middleware.
 		middleware.Recoverer,
 	)
-	amqpCommon.RegisterMessageHandler(router, subscriber, publisher, userMessageHandlers)
-	amqpCommon.RegisterMessageHandler(router, subscriber, publisher, notificationMessageHandlers)
+	amqpCommon.RegisterMessageHandler(router, subscriber1, publisher, userMessageHandlers)
+	amqpCommon.RegisterMessageHandler(router, subscriber2, publisher, notificationMessageHandlers)
 
 	router.AddNoPublisherHandler(
 		"print_outgoing_messages_in_notification",
 		"notification.emailNotificationSent",
-		subscriber,
+		subscriber2,
 		printMessages,
 	)
 
