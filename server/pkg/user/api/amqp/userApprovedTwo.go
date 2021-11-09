@@ -11,27 +11,27 @@ import (
 	"github.com/pkg/errors"
 )
 
-type UserApprovedHandler struct {
+type UserApprovedTwoHandler struct {
 	service business.UserService
 }
 
-func NewUserApprovedHandler(s business.UserService) *UserApprovedHandler {
-	return &UserApprovedHandler{s}
+func NewUserApprovedTwoHandler(s business.UserService) *UserApprovedTwoHandler {
+	return &UserApprovedTwoHandler{s}
 }
 
-func (h UserApprovedHandler) Name() string {
-	return "user_userApprovedHandler"
+func (h UserApprovedTwoHandler) Name() string {
+	return "user_userApprovedTwoHandlerTwo"
 }
 
-func (h UserApprovedHandler) SubscribeTopic() string {
-	return event.UserRegistrationApproved
-}
-
-func (h UserApprovedHandler) PublishTopic() string {
+func (h UserApprovedTwoHandler) SubscribeTopic() string {
 	return event.UserCreated
 }
 
-func (h UserApprovedHandler) Handler(msg *message.Message) ([]*message.Message, error) {
+func (h UserApprovedTwoHandler) PublishTopic() string {
+	return event.EmailNotificationSent
+}
+
+func (h UserApprovedTwoHandler) Handler(msg *message.Message) ([]*message.Message, error) {
 	p := event.UserRegistrationApprovedMsg{}
 	err := json.Unmarshal(msg.Payload, &p)
 	if err != nil {
@@ -50,7 +50,7 @@ func (h UserApprovedHandler) Handler(msg *message.Message) ([]*message.Message, 
 		return nil, errors.Wrap(err, "cannot marshal userRegistration for amqp")
 	}
 
-	log.Printf("sent userCreatedOne event with user id: %s to amqp", p.ID)
+	log.Printf("sent userCreatedTwo event with user id: %s to amqp", p.ID)
 
 	msg = message.NewMessage(watermill.NewUUID(), b)
 
